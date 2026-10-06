@@ -14,6 +14,8 @@
   <ItemGroup>
     <!-- Sprites neben die .exe kopieren -->
     <None Update="Assets\**\*.png" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Charaktere (JSON + Sprites) ebenfalls kopieren, damit man sie ohne Code-Aenderung anpassen kann -->
+    <None Update="Characters\**\*.*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
