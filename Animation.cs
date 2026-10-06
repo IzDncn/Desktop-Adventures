@@ -22,15 +22,14 @@ public sealed class Animation
     public static Animation Load(string file, int frameW, int frameH, int frameMs, bool loop)
         => LoadFromFile(Path.Combine(AppContext.BaseDirectory, "Assets", file), frameW, frameH, frameMs, loop);
 
+    /// <summary>Laedt ein einzelnes Bild (Kulisse o. ae.) aus dem Ordner Assets/.</summary>
+    public static BitmapSource LoadAssetImage(string file)
+        => ReadBitmap(Path.Combine(AppContext.BaseDirectory, "Assets", file));
+
     /// <summary>Laedt ein Sprite-Sheet von einem beliebigen Pfad und schneidet es in Frames.</summary>
     public static Animation LoadFromFile(string path, int frameW, int frameH, int frameMs, bool loop)
     {
-        var sheet = new BitmapImage();
-        sheet.BeginInit();
-        sheet.UriSource = new Uri(path);
-        sheet.CacheOption = BitmapCacheOption.OnLoad;
-        sheet.EndInit();
-        sheet.Freeze();
+        var sheet = ReadBitmap(path);
 
         int count = sheet.PixelWidth / frameW;
         if (count < 1 || sheet.PixelHeight < frameH)
@@ -47,5 +46,16 @@ public sealed class Animation
         }
 
         return new Animation(frames, frameMs, loop);
+    }
+
+    private static BitmapImage ReadBitmap(string path)
+    {
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.UriSource = new Uri(path);
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.EndInit();
+        bitmap.Freeze();
+        return bitmap;
     }
 }

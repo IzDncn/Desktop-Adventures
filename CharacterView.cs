@@ -24,7 +24,7 @@ public sealed class CharacterView
     {
         double w = frameWidth * SceneLayout.Scale;
         double h = frameHeight * SceneLayout.Scale;
-        _top = SceneLayout.Height - h;
+        _top = SceneLayout.FloorY - h;
         _centerX = seat.X + w / 2;
 
         _image = new Image { Width = w, Height = h, Stretch = Stretch.Fill, Cursor = Cursors.Hand };
@@ -49,7 +49,7 @@ public sealed class CharacterView
             FontWeight = FontWeights.Bold,
             Foreground = ink,
             TextWrapping = TextWrapping.Wrap,
-            MaxWidth = 170
+            MaxWidth = 140
         };
         _bubble = new Border
         {
@@ -80,9 +80,11 @@ public sealed class CharacterView
         _bubble.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
         var size = _bubble.DesiredSize;
 
-        // ueber dem Kopf zentrieren, aber im Fenster halten
-        double left = Math.Clamp(_centerX - size.Width / 2, 4, SceneLayout.Width - size.Width - 4);
-        double top = Math.Max(2, _top - size.Height - 4);
+        // ueber dem Kopf zentrieren, aber innerhalb des Holzrahmens halten
+        double minLeft = SceneLayout.Inset + 4;
+        double maxLeft = Math.Max(minLeft, SceneLayout.Width - SceneLayout.Inset - size.Width - 4);
+        double left = Math.Clamp(_centerX - size.Width / 2, minLeft, maxLeft);
+        double top = Math.Max(SceneLayout.Inset + 2, _top - size.Height - 4);
         Canvas.SetLeft(_bubble, left);
         Canvas.SetTop(_bubble, top);
 

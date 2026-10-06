@@ -20,8 +20,8 @@
         </ContextMenu>
     </Window.ContextMenu>
 
-    <!-- Zwei Ebenen ohne Background (klickdurchlaessig):
-         SceneLayer = Feuer + Figuren, OverlayLayer = Sprechblasen (immer obenauf).
+    <!-- Zwei Ebenen: SceneLayer = Kulisse + Feuer + Figuren, OverlayLayer = Sprechblasen (obenauf).
+         Nur die gezeichneten Pixel sind klickbar; die abgerundeten Rahmenecken sind durchsichtig.
          Die Groesse kommt aus SceneLayout und wird in MainWindow.xaml.cs gesetzt. -->
     <Grid>
         <Canvas x:Name="SceneLayer" />

@@ -21,12 +21,23 @@ public sealed class CampScene
 
     public CampScene(Canvas sceneLayer, Canvas overlayLayer)
     {
+        // --- Kulisse (unterste Ebene): Rahmen, Himmel, Boden ---
+        var backdrop = new Image
+        {
+            Width = SceneLayout.Width,
+            Height = SceneLayout.Height,
+            Stretch = Stretch.Fill,
+            Source = Animation.LoadAssetImage("backdrop.png")
+        };
+        RenderOptions.SetBitmapScalingMode(backdrop, BitmapScalingMode.NearestNeighbor);
+        sceneLayer.Children.Add(backdrop);
+
         // --- Feuer ---
         double fireSize = 16 * SceneLayout.Scale;
         var fireImage = new Image { Width = fireSize, Height = fireSize, Stretch = Stretch.Fill };
         RenderOptions.SetBitmapScalingMode(fireImage, BitmapScalingMode.NearestNeighbor);
         Canvas.SetLeft(fireImage, SceneLayout.FireX);
-        Canvas.SetTop(fireImage, SceneLayout.Height - fireSize);
+        Canvas.SetTop(fireImage, SceneLayout.FloorY - fireSize);
         sceneLayer.Children.Add(fireImage);
 
         _fire = new AnimatedSprite(fireImage);
