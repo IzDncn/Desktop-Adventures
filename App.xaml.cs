@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace Lagerfeuer;
+namespace DesktopAdventures;
 
 public partial class App : Application
 {

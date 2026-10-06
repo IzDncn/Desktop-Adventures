@@ -6,7 +6,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <RootNamespace>Lagerfeuer</RootNamespace>
+    <RootNamespace>DesktopAdventures</RootNamespace>
+    <AssemblyName>DesktopAdventures</AssemblyName>
+    <Product>Desktop Adventures</Product>
   </PropertyGroup>
 
   <ItemGroup>

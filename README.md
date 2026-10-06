@@ -1,4 +1,4 @@
-# Lagerfeuer
+# Desktop Adventures
 
 Ein kleines Pixel-Art-Spiel ohne richtiges Fenster: Ein Lagerfeuer mit Charakteren sitzt
 direkt auf der Taskleiste. Transparente Bereiche sind klickdurchlaessig.

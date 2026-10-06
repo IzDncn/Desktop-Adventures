@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace Lagerfeuer;
+namespace DesktopAdventures;
 
 /// <summary>Spielt eine Animation auf einem Image-Control ab. Wird vom Game-Loop getaktet.</summary>
 public sealed class AnimatedSprite

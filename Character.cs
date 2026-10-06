@@ -1,4 +1,4 @@
-namespace Lagerfeuer;
+namespace DesktopAdventures;
 
 public enum CharacterState
 {

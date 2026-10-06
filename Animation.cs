@@ -2,7 +2,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace Lagerfeuer;
+namespace DesktopAdventures;
 
 /// <summary>Eine Frame-Folge aus einem horizontalen Sprite-Sheet.</summary>
 public sealed class Animation
