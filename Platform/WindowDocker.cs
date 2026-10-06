@@ -16,6 +16,12 @@ public sealed class WindowDocker
     /// <summary>Abstand zum rechten Bildschirmrand.</summary>
     public double Margin { get; set; } = 16;
 
+    /// <summary>
+    /// Abstand zum unteren Bildschirmrand. Muss > 0 sein, sonst deckt unser Fenster die
+    /// Kante ab, an der die Autohide-Taskleiste per Mausberuehrung eingeblendet wird.
+    /// </summary>
+    public double BottomGap { get; set; } = 6;
+
     /// <summary>Wie schnell das Fenster der Taskleiste folgt (0..1 pro Tick).</summary>
     public double Follow { get; set; } = 0.5;
 
@@ -53,7 +59,7 @@ public sealed class WindowDocker
     private void Apply()
     {
         double left = SystemParameters.PrimaryScreenWidth - _window.Width - Margin - _right;
-        double top = SystemParameters.PrimaryScreenHeight - _window.Height - _bottom;
+        double top = SystemParameters.PrimaryScreenHeight - _window.Height - _bottom - BottomGap;
 
         if (Math.Abs(_window.Left - left) > 0.01) _window.Left = left;
         if (Math.Abs(_window.Top - top) > 0.01) _window.Top = top;
