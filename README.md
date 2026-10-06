@@ -17,6 +17,10 @@ Eigene Sprites einfach als horizontale Sprite-Sheets (Frames nebeneinander) erse
 ## Etappen
 - [x] 1. Transparentes Fenster mit animiertem Lagerfeuer
 - [x] 2. Ein Charakter mit Idle-Animation und Klick-Reaktion
-- [ ] 3. Mehrere Charaktere aus JSON laden
-- [ ] 4. Erstes Minigame samt Freischaltung
-- [ ] 5. Speichern, Tageszeit-Stimmung, Tray-Icon
+- [x] 3. Taskleisten-Verhalten (folgt der Autohide-Taskleiste)
+- [ ] 4. Charaktere aus JSON (Aussehen, Outfits, Texte austauschbar)
+- [ ] 5. Das "Fenster": klarer, gerahmter Spielbereich
+- [ ] 6. Erstes Minigame samt Freischaltung
+- [ ] 7. Speichern, Tageszeit-Stimmung, Tray-Icon
+
+Siehe `CHANGELOG.md`. Jede Etappe ist als Git-Tag abgelegt (`etappe-2`, `etappe-3`, ...).

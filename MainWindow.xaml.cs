@@ -2,18 +2,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using DesktopAdventures.Platform;
 
 namespace DesktopAdventures;
 
 public partial class MainWindow : Window
 {
     private const int Scale = 5;          // 1 Sprite-Pixel = 5 Bildschirm-Pixel
-    private const int ScreenMargin = 16;  // Abstand zum rechten Bildschirmrand
 
     private readonly DispatcherTimer _loop = new() { Interval = TimeSpan.FromMilliseconds(33) };
     private readonly DispatcherTimer _bubbleTimer = new() { Interval = TimeSpan.FromSeconds(2.5) };
     private DateTime _lastTick = DateTime.UtcNow;
 
+    private readonly WindowDocker _docker;
     private readonly AnimatedSprite _fireSprite;
     private readonly AnimatedSprite _characterSprite;
     private readonly Character _character;
@@ -21,6 +22,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+
+        _docker = new WindowDocker(this);
 
         // --- Feuer: 16x16, Loop ---
         FireImage.Width = FireImage.Height = 16 * Scale;
@@ -66,15 +69,7 @@ public partial class MainWindow : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        PlaceAboveTaskbar();
-    }
-
-    /// <summary>Setzt das Fenster unten rechts direkt auf die Taskleiste (Arbeitsbereich-Kante).</summary>
-    private void PlaceAboveTaskbar()
-    {
-        var area = SystemParameters.WorkArea; // Bildschirm ohne Taskleiste, in DIPs
-        Left = area.Right - Width - ScreenMargin;
-        Top = area.Bottom - Height;
+        _docker.Snap();
     }
 
     private void OnTick(object? sender, EventArgs e)
@@ -83,6 +78,7 @@ public partial class MainWindow : Window
         double dtMs = (now - _lastTick).TotalMilliseconds;
         _lastTick = now;
 
+        _docker.Update(); // folgt der (Autohide-)Taskleiste
         _fireSprite.Update(dtMs);
         _characterSprite.Update(dtMs);
     }
