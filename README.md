@@ -10,17 +10,18 @@ direkt auf der Taskleiste. Transparente Bereiche sind klickdurchlaessig.
 
 Voraussetzung: .NET 8 SDK, Windows.
 
-## Sprites
-`make_sprites.py` (Python + Pillow) erzeugt die Platzhalter-Sprites in `Assets/`.
-Eigene Sprites einfach als horizontale Sprite-Sheets (Frames nebeneinander) ersetzen.
+## Charaktere & Sprites
+Charaktere (Aussehen, Outfits, Texte) liegen als JSON + PNG in `Characters/`, Anleitung: `docs/CHARAKTERE.md`.
+`tools/make_sprites.py` (Python + Pillow) erzeugt die Platzhalter-Sprites; eigene Pixel-Art ersetzt sie einfach.
 
 ## Etappen
 - [x] 1. Transparentes Fenster mit animiertem Lagerfeuer
 - [x] 2. Ein Charakter mit Idle-Animation und Klick-Reaktion
 - [x] 3. Taskleisten-Verhalten (folgt der Autohide-Taskleiste)
-- [ ] 4. Charaktere aus JSON (Aussehen, Outfits, Texte austauschbar)
+- [x] 4. Charaktere aus JSON (Aussehen, Outfits, Texte austauschbar) - siehe `docs/CHARAKTERE.md`
 - [ ] 5. Das "Fenster": klarer, gerahmter Spielbereich
 - [ ] 6. Erstes Minigame samt Freischaltung
 - [ ] 7. Speichern, Tageszeit-Stimmung, Tray-Icon
 
-Siehe `CHANGELOG.md`. Jede Etappe ist als Git-Tag abgelegt (`etappe-2`, `etappe-3`, ...).
+Siehe `CHANGELOG.md`. Jede Etappe ist als Git-Tag abgelegt (`etappe-2`, `etappe-3`, `etappe-3.1`, `etappe-4`, ...).
+Alten Stand ansehen: `git checkout etappe-3.1` - zurueck zur neuesten Version: `git checkout main`.

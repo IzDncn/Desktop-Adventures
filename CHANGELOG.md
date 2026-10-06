@@ -2,6 +2,14 @@
 
 Jede Etappe ist ein Git-Tag. Alte Staende ansehen: `git checkout etappe-2` (zurueck: `git checkout main`).
 
+## Etappe 4 (`etappe-4`)
+- Charaktere kommen aus `Characters/<id>/character.json` (Name, Sitzplatz, Texte, Outfits, Frame-Groesse/-Timing)
+- Outfits pro Charakter (Wanderer: `default` + `winter`), Wechsel per `Character.SetOutfit`
+- Zwei Charaktere am Feuer (Wanderer, Pip der Barde); eigene Sprechblase pro Charakter, gelegentliches Selbstgespraech
+- Neue Struktur: `CampScene` (Aufbau + Takt), `CharacterView` (UI), `Character` (Logik), `Data/` (JSON-Modelle + Loader), `SceneLayout`
+- Fehlerhafte Charaktere werden uebersprungen und beim Start gemeldet
+- Doku: `docs/CHARAKTERE.md`; Sprite-Generator liegt jetzt in `tools/`
+
 ## Etappe 3.1 (`etappe-3.1`)
 - Fix: 6 px Abstand zum unteren Bildschirmrand, damit die Autohide-Taskleiste einfahren kann (`WindowDocker.BottomGap`)
 
