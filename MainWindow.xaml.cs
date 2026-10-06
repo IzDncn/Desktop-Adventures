@@ -1,6 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Threading;
 using DesktopAdventures.Platform;
 
@@ -8,61 +6,22 @@ namespace DesktopAdventures;
 
 public partial class MainWindow : Window
 {
-    private const int Scale = 5;          // 1 Sprite-Pixel = 5 Bildschirm-Pixel
-
     private readonly DispatcherTimer _loop = new() { Interval = TimeSpan.FromMilliseconds(33) };
-    private readonly DispatcherTimer _bubbleTimer = new() { Interval = TimeSpan.FromSeconds(2.5) };
     private DateTime _lastTick = DateTime.UtcNow;
 
     private readonly WindowDocker _docker;
-    private readonly AnimatedSprite _fireSprite;
-    private readonly AnimatedSprite _characterSprite;
-    private readonly Character _character;
+    private readonly CampScene _camp;
 
     public MainWindow()
     {
         InitializeComponent();
 
+        Width = SceneLayout.Width;
+        Height = SceneLayout.Height;
+
         _docker = new WindowDocker(this);
+        _camp = new CampScene(SceneLayer, OverlayLayer);
 
-        // --- Feuer: 16x16, Loop ---
-        FireImage.Width = FireImage.Height = 16 * Scale;
-        Canvas.SetLeft(FireImage, 150);
-        Canvas.SetTop(FireImage, Height - 16 * Scale);
-        _fireSprite = new AnimatedSprite(FireImage);
-        _fireSprite.Play(Animation.Load("fire.png", 16, 16, 120, loop: true));
-
-        // --- Charakter: 16x24 ---
-        CharacterImage.Width = 16 * Scale;
-        CharacterImage.Height = 24 * Scale;
-        Canvas.SetLeft(CharacterImage, 60);
-        Canvas.SetTop(CharacterImage, Height - 24 * Scale);
-        _characterSprite = new AnimatedSprite(CharacterImage);
-
-        _character = new Character(
-            "Wanderer",
-            _characterSprite,
-            idle: Animation.Load("char_idle.png", 16, 24, 400, loop: true),
-            react: Animation.Load("char_react.png", 16, 24, 150, loop: false),
-            lines: new[]
-            {
-                "Mhm, schoen warm hier.",
-                "Hast du Marshmallows dabei?",
-                "Das Feuer knistert so gemuetlich...",
-                "Noch ein Scheit, dann geht's los!"
-            });
-        _character.Said += ShowBubble;
-
-        // --- Bubble ---
-        Canvas.SetLeft(Bubble, 10);
-        Canvas.SetTop(Bubble, 8);
-        _bubbleTimer.Tick += (_, _) =>
-        {
-            Bubble.Visibility = Visibility.Collapsed;
-            _bubbleTimer.Stop();
-        };
-
-        // --- Game-Loop ---
         _loop.Tick += OnTick;
         _loop.Start();
     }
@@ -70,6 +29,13 @@ public partial class MainWindow : Window
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         _docker.Snap();
+
+        if (_camp.LoadErrors.Count > 0)
+        {
+            MessageBox.Show(this,
+                "Einige Charaktere konnten nicht geladen werden:\n\n" + string.Join("\n", _camp.LoadErrors),
+                "Desktop Adventures", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 
     private void OnTick(object? sender, EventArgs e)
@@ -78,22 +44,8 @@ public partial class MainWindow : Window
         double dtMs = (now - _lastTick).TotalMilliseconds;
         _lastTick = now;
 
-        _docker.Update(); // folgt der (Autohide-)Taskleiste
-        _fireSprite.Update(dtMs);
-        _characterSprite.Update(dtMs);
-    }
-
-    private void ShowBubble(string text)
-    {
-        BubbleText.Text = text;
-        Bubble.Visibility = Visibility.Visible;
-        _bubbleTimer.Stop();
-        _bubbleTimer.Start();
-    }
-
-    private void Character_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        _character.OnClicked();
+        _docker.Update();   // folgt der (Autohide-)Taskleiste
+        _camp.Update(dtMs); // Feuer + Charaktere
     }
 
     private void Exit_Click(object sender, RoutedEventArgs e)
