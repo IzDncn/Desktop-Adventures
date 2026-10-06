@@ -4,6 +4,7 @@ Ersetze die PNGs spaeter durch eigene Pixel-Art (z. B. aus Aseprite): gleiche Fr
 Frames nebeneinander in einer Datei. Die Charakter-Texte/Zuordnung stehen in Characters/*/character.json.
 """
 import os
+import random
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -104,4 +105,92 @@ save_outfit("wanderer", "default", {**BASE, "hood": rgb(60, 90, 140), "coat": rg
 save_outfit("wanderer", "winter", {**BASE, "hood": rgb(225, 230, 240), "coat": rgb(110, 140, 185), "scarf": rgb(190, 50, 50)})
 save_outfit("pip", "default", {**BASE, "hood": rgb(80, 130, 80), "coat": rgb(170, 120, 50), "pants": rgb(90, 60, 50),
                                "hat": rgb(50, 90, 50), "feather": rgb(220, 60, 60)})
+
+
+# ---------- Kulisse: 76x48 Sprite-Pixel (= 380x240 bei Scale 5) mit Holzrahmen ----------
+# Muss zu SceneLayout.cs passen: Frame-Staerke T = SceneLayout.FrameThickness, Boden ab Zeile GROUND_TOP.
+BW, BH, T = 76, 48, 3
+GROUND_TOP = 38
+
+
+def make_backdrop():
+    im = Image.new("RGBA", (BW, BH), (0, 0, 0, 0))
+    rnd = random.Random(7)  # fester Seed -> immer dieselbe Kulisse
+
+    def put(x, y, c):
+        if 0 <= x < BW and 0 <= y < BH:
+            im.putpixel((x, y), c)
+
+    # Himmel (4 Farbbaender) und Boden
+    sky = [rgb(16, 18, 40), rgb(22, 24, 54), rgb(30, 28, 66), rgb(42, 34, 78)]
+    for y in range(BH):
+        for x in range(BW):
+            if y < GROUND_TOP:
+                band = (max(y, T) - T) * len(sky) // (GROUND_TOP - T)
+                put(x, y, sky[min(band, len(sky) - 1)])
+
+    # Sterne
+    for _ in range(20):
+        x, y = rnd.randint(T + 1, BW - T - 2), rnd.randint(T + 1, 30)
+        put(x, y, rgb(255, 255, 220) if rnd.random() < 0.35 else rgb(150, 150, 190))
+
+    # Mond
+    cx, cy = 46, 9
+    for dy in range(-3, 4):
+        for dx in range(-3, 4):
+            if dx * dx + dy * dy <= 9:
+                put(cx + dx, cy + dy, rgb(240, 235, 190))
+    put(cx + 1, cy + 1, rgb(215, 208, 160))
+    put(cx - 1, cy - 1, rgb(215, 208, 160))
+
+    # Tannen-Silhouetten am Rand (der Rahmen wird danach darueber gezeichnet)
+    def pine(px, base, h):
+        for i in range(h):
+            y = base - h + 1 + i
+            for x in range(px - i // 2, px + i // 2 + 1):
+                put(x, y, rgb(10, 14, 30))
+        put(px, base, rgb(10, 14, 30))
+
+    pine(6, GROUND_TOP, 16)
+    pine(12, GROUND_TOP, 11)
+    pine(69, GROUND_TOP, 15)
+    pine(63, GROUND_TOP, 10)
+
+    # Boden: Grasstreifen + Erde mit Sprenkeln
+    grass, grass2 = rgb(44, 96, 52), rgb(32, 74, 44)
+    for x in range(BW):
+        if rnd.random() < 0.12:
+            put(x, GROUND_TOP - 1, grass)  # Grasbueschel
+        put(x, GROUND_TOP, grass)
+        put(x, GROUND_TOP + 1, grass2)
+        for y in range(GROUND_TOP + 2, BH):
+            r = rnd.random()
+            put(x, y, rgb(58, 42, 32) if r < 0.12 else rgb(92, 68, 50) if r < 0.17 else rgb(74, 54, 40))
+
+    # Steinkranz unter dem Feuer (Feuer: Sprite-x 30..45, Fuss auf Zeile 42)
+    for x in range(30, 46):
+        put(x, 42, rgb(120, 120, 128) if (x // 2) % 2 == 0 else rgb(88, 88, 96))
+    for x in range(31, 45):
+        put(x, 43, rgb(60, 60, 68))
+
+    # Holzrahmen
+    outline, wood, light, dark, nail = rgb(35, 22, 14), rgb(120, 80, 45), rgb(150, 105, 60), rgb(70, 46, 28), rgb(190, 190, 200)
+    for y in range(BH):
+        for x in range(BW):
+            d = min(x, y, BW - 1 - x, BH - 1 - y)
+            if d == 0:
+                put(x, y, outline)
+            elif d == 1:
+                put(x, y, rgb(100, 66, 38) if (x + y) % 7 == 0 else wood)  # leichte Maserung
+            elif d == 2:
+                put(x, y, dark if (y == 2 or x == 2) else light)            # Innenkante: oben/links Schatten
+    for x, y in ((1, 1), (BW - 2, 1), (1, BH - 2), (BW - 2, BH - 2)):
+        put(x, y, nail)                                                      # Nieten in den Ecken
+    for x, y in ((0, 0), (BW - 1, 0), (0, BH - 1), (BW - 1, BH - 1)):
+        put(x, y, (0, 0, 0, 0))                                              # abgerundete Ecken
+
+    im.save(os.path.join(ROOT, "Assets", "backdrop.png"))
+
+
+make_backdrop()
 print("ok")
