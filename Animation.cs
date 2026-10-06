@@ -18,11 +18,13 @@ public sealed class Animation
         Loop = loop;
     }
 
-    /// <summary>Laedt Assets/&lt;file&gt; und schneidet es in Frames der Groesse frameW x frameH.</summary>
+    /// <summary>Laedt ein Sprite-Sheet aus dem Ordner Assets/ (Feuer, spaeter Kulisse etc.).</summary>
     public static Animation Load(string file, int frameW, int frameH, int frameMs, bool loop)
-    {
-        var path = Path.Combine(AppContext.BaseDirectory, "Assets", file);
+        => LoadFromFile(Path.Combine(AppContext.BaseDirectory, "Assets", file), frameW, frameH, frameMs, loop);
 
+    /// <summary>Laedt ein Sprite-Sheet von einem beliebigen Pfad und schneidet es in Frames.</summary>
+    public static Animation LoadFromFile(string path, int frameW, int frameH, int frameMs, bool loop)
+    {
         var sheet = new BitmapImage();
         sheet.BeginInit();
         sheet.UriSource = new Uri(path);
@@ -31,6 +33,11 @@ public sealed class Animation
         sheet.Freeze();
 
         int count = sheet.PixelWidth / frameW;
+        if (count < 1 || sheet.PixelHeight < frameH)
+            throw new InvalidDataException(
+                $"Sprite-Sheet {Path.GetFileName(path)} ({sheet.PixelWidth}x{sheet.PixelHeight}) " +
+                $"ist zu klein fuer Frames von {frameW}x{frameH}.");
+
         var frames = new BitmapSource[count];
         for (int i = 0; i < count; i++)
         {
