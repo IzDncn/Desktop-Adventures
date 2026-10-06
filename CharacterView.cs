@@ -73,6 +73,10 @@ public sealed class CharacterView
     public void ShowBubble(string text)
     {
         _bubbleText.Text = text;
+
+        // Wichtig: Ein Collapsed-Element misst sich auf 0x0. Darum erst sichtbar machen, dann messen -
+        // sonst stimmt die Breite nicht und die Blase ragt ueber den Fensterrand hinaus.
+        _bubble.Visibility = Visibility.Visible;
         _bubble.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
         var size = _bubble.DesiredSize;
 
@@ -82,7 +86,6 @@ public sealed class CharacterView
         Canvas.SetLeft(_bubble, left);
         Canvas.SetTop(_bubble, top);
 
-        _bubble.Visibility = Visibility.Visible;
         _bubbleTimer.Stop();
         _bubbleTimer.Start();
     }

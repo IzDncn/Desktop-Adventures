@@ -2,6 +2,9 @@
 
 Jede Etappe ist ein Git-Tag. Alte Staende ansehen: `git checkout etappe-2` (zurueck: `git checkout main`).
 
+## Etappe 4.1 (`etappe-4.1`)
+- Fix: Sprechblasen ragten ueber den Fensterrand (Blase wurde im unsichtbaren Zustand gemessen -> Breite 0)
+
 ## Etappe 4 (`etappe-4`)
 - Charaktere kommen aus `Characters/<id>/character.json` (Name, Sitzplatz, Texte, Outfits, Frame-Groesse/-Timing)
 - Outfits pro Charakter (Wanderer: `default` + `winter`), Wechsel per `Character.SetOutfit`
