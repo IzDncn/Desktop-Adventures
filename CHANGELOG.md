@@ -2,6 +2,13 @@
 
 Jede Etappe ist ein Git-Tag. Alte Staende ansehen: `git checkout etappe-2` (zurueck: `git checkout main`).
 
+## Etappe 5 (`etappe-5`)
+- Gerahmter Spielbereich: Kulisse `Assets/backdrop.png` (Holzrahmen, Nachthimmel, Mond, Tannen, Boden, Steinkranz)
+- Fenster ist jetzt 380x240; Figuren und Feuer stehen auf einer festen Standlinie (`SceneLayout.FloorY`)
+- Sprechblasen bleiben innerhalb des Rahmens und sind etwas schmaler (zwei Blasen passen nebeneinander)
+- Hinweis: Das Fenster ist jetzt sichtbar und faengt Klicks ab (nur die abgerundeten Ecken sind durchsichtig)
+- Doku: `docs/SZENE.md`
+
 ## Etappe 4.1 (`etappe-4.1`)
 - Fix: Sprechblasen ragten ueber den Fensterrand (Blase wurde im unsichtbaren Zustand gemessen -> Breite 0)
 
